@@ -5,7 +5,7 @@ import pytest
 from sqlalchemy.orm import Session
 
 from app import models, schemas
-from app.repository import InMemoryCoilRepository, SQLAlchemyCoilRepository
+from app.repository import InMemoryCoilRepository, CoilRepository
 
 
 @pytest.fixture
@@ -43,16 +43,14 @@ def coil():
         date_removed=None,
     )
 
-
-# Тесты для SQLAlchemyCoilRepository
 def test_sqlalchemy_create_coil(mock_db_session, coil_create):
-    """Тестирует создание руллона в репозитории SQLAlchemyCoilRepository.
+    """Тестирует создание руллона в репозитории CoilRepository.
 
     Аргументы:
         mock_db_session (Mock): Мок-объект сессии базы данных.
         coil_create (schemas.CoilCreate): Данные для создания руллона.
     """
-    repo = SQLAlchemyCoilRepository(mock_db_session)
+    repo = CoilRepository(mock_db_session)
     mock_coil = models.Coil(
         id=1, length=coil_create.length, weight=coil_create.weight, date_added=datetime.now(UTC)
     )
@@ -86,7 +84,7 @@ def test_sqlalchemy_remove_coil(mock_db_session, coil):
         mock_db_session (Mock): Мок-объект сессии базы данных.
         coil (models.Coil): Тестовый объект руллона.
     """
-    repo = SQLAlchemyCoilRepository(mock_db_session)
+    repo = CoilRepository(mock_db_session)
     mock_db_session.query.return_value.filter.return_value.first.return_value = coil
 
     result = repo.remove_coil(coil.id)
@@ -98,12 +96,12 @@ def test_sqlalchemy_remove_coil(mock_db_session, coil):
 
 
 def test_sqlalchemy_remove_coil_not_found(mock_db_session):
-    """Тестирует попытку удаления несуществующего руллона в SQLAlchemyCoilRepository.
+    """Тестирует попытку удаления несуществующего руллона в CoilRepository.
 
     Аргументы:
         mock_db_session (Mock): Мок-объект сессии базы данных.
     """
-    repo = SQLAlchemyCoilRepository(mock_db_session)
+    repo = CoilRepository(mock_db_session)
     mock_db_session.query.return_value.filter.return_value.first.return_value = None
 
     result = repo.remove_coil(999)
@@ -118,7 +116,7 @@ def test_sqlalchemy_get_coils_empty(mock_db_session):
     Аргументы:
         mock_db_session (Mock): Мок-объект сессии базы данных.
     """
-    repo = SQLAlchemyCoilRepository(mock_db_session)
+    repo = CoilRepository(mock_db_session)
     mock_db_session.query.return_value.all.return_value = []
 
     result = repo.get_coils()
@@ -133,7 +131,7 @@ def test_sqlalchemy_get_statistics_empty(mock_db_session):
     Аргументы:
         mock_db_session (Mock): Мок-объект сессии базы данных.
     """
-    repo = SQLAlchemyCoilRepository(mock_db_session)
+    repo = CoilRepository(mock_db_session)
     start_date = datetime.now(UTC) - timedelta(days=1)
     end_date = datetime.now(UTC)
 

@@ -176,7 +176,8 @@ def coil_list(db_session, date_range):
     saved_coils = db_session.query(models.Coil).all()
     print(
         f"Сохранённые руллоны в фикстуре: {len(saved_coils)} руллонов: "
-        f"{[{'id': c.id, 'date_added': c.date_added, 'date_removed': c.date_removed} for c in saved_coils]}"
+        f"{[{'id': c.id, 'date_added': c.date_added, 
+             'date_removed': c.date_removed} for c in saved_coils]}"
     )
     yield coils
     for coil in coils:
