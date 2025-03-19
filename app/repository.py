@@ -2,9 +2,6 @@ from abc import ABC, abstractmethod
 from datetime import UTC, datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
-from sqlalchemy import and_, extract, func, or_
-from sqlalchemy.orm import Session
-
 from app import models, schemas
 
 
