@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 
 from app import models, schemas
 from app.db import engine, get_db
-from app.repository import CoilRepository, SQLAlchemyCoilRepository
+from app.repository import CoilRepository
 
 app = FastAPI(
     title="Metal Warehouse API",
@@ -32,7 +32,7 @@ def get_repository(db: Session = Depends(get_db)) -> CoilRepository:
     Возвращает:
         Экземпляр репозитория руллонов.
     """
-    return SQLAlchemyCoilRepository(db)
+    return CoilRepository(db)
 
 
 @app.post("/coils/", response_model=schemas.Coil)
